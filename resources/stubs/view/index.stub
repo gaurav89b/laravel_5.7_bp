@@ -1,0 +1,53 @@
+@extends('admin.layouts.master')
+
+@section('content')
+<h1>{{ trans('admin/{{modelNamePluralLowerCase}}.manage_{{modelNamePluralLowerCase}}') }}</h1>
+<p>{!! link_to_route('{{modelNamePluralLowerCase}}.create', trans('admin/{{modelNamePluralLowerCase}}.add_new') , null, array('class' => 'btn btn-success')) !!}</p>
+
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        {!! implode('', $errors->all('<li class="error">:message</li>')) !!}
+    </ul>
+</div>
+@endif
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">{{ trans('admin/{{modelNamePluralLowerCase}}.list') }}</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-responsive">
+        <table class="table table-striped table-hover table-responsive datatable table_layout_fixed users_table" id="datatable-table">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (${{modelNamePluralLowerCase}} as $row)
+                <tr>
+                    <td>{{ $row->id }}</td>
+                    <td>
+                      {!! link_to_route('{{modelNamePluralLowerCase}}.edit', trans('admin/{{modelNamePluralLowerCase}}.edit'), array($row->id), array('class' => 'btn btn-xs btn-info')) !!}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+@endsection
+@section('javascript')
+<script>
+    $('.hidden').hide();
+    $('#datatable-table').dataTable({
+        retrieve: true,
+        "iDisplayLength": 100,
+        "aaSorting": [],
+        "order": [[ 0, "desc" ]],
+    });
+</script>
+@stop

@@ -1,0 +1,43 @@
+@extends('admin.layouts.master')
+
+@section('content')
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-2">
+        <h1>{{ trans('admin/{{modelNamePluralLowerCase}}.edit') }}</h1>
+
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                {!! implode('', $errors->all('<li class="error">:message</li>')) !!}
+            </ul>
+        </div>
+        @endif
+    </div>
+</div>
+{!! Form::model(${{modelNamePluralLowerCase}}, array('files' => true, 'class' => 'form-horizontal', 'id' => 'form-with-validation', 'method' => 'PATCH', 'route' => array('{{modelNamePluralLowerCase}}.update', ${{modelNamePluralLowerCase}}->id))) !!}
+
+<div class="form-group">
+    {!! Form::label('fk_users_role', 'User Type', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        {!! Form::select('fk_users_role', config('user_roles.user_type'), null, ['class' => 'form-control']) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('first_name', 'First Name', ['class' => 'col-sm-2 control-label']) !!}
+    <div class="col-sm-10">
+        {!! Form::text('first_name', old('name',${{modelNamePluralLowerCase}}->first_name), ['class' => 'form-control']) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-10 col-sm-offset-2">
+        {!! Form::submit(trans('admin/{{modelNamePluralLowerCase}}.update'), array('class' => 'btn btn-primary')) !!}
+        {!! link_to_route('{{modelNamePluralLowerCase}}.index', trans('admin/{{modelNamePluralLowerCase}}.cancel'), null, array('class' => 'btn btn-default')) !!}
+    </div>
+</div>
+
+{!! Form::close() !!}
+
+@endsection

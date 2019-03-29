@@ -1,0 +1,64 @@
+version: "3.2"
+
+services:
+  sgbpapi-nginx:
+    build: 
+      context: .
+      dockerfile: nginx-dockerfile
+    ports:
+      - "8094:80"
+    networks:
+      - sgbpapinet
+    volumes:
+      - ../:/var/appcode/sgbpapi
+    depends_on:
+      - sgbpapi-phpfpm
+  
+  #socoemail-php:
+  #  build:
+  #    context: .
+  #    dockerfile: php-dockerfile
+  #  networks:
+  #    - socoemailnet
+  #  volumes:
+  #    - .:/var/appcode/socoemail
+  #  depends_on:
+  #    - socoemail-redis
+  
+  sgbpapi-phpfpm:
+    build:
+      context: .
+      dockerfile: phpfpm-dockerfile
+    networks:
+      - sgbpapinet
+    volumes:
+      - ../:/var/appcode/sgbpapi
+    depends_on:
+      - sgbpapi-redis
+      - sgbpapi-db
+
+  sgbpapi-redis:
+    build:
+      context: .
+      dockerfile: redis-dockerfile
+    networks:
+      - sgbpapinet
+
+  sgbpapi-db:
+    image: mysql:5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3369:3306"
+    volumes:
+      - "mysql-data:/var/lib/mysql"
+    networks:
+    - sgbpapinet
+
+networks:
+  sgbpapinet:
+    driver: bridge      
+
+volumes:
+    mysql-data:
